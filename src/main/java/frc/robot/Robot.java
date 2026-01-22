@@ -34,6 +34,8 @@ public class Robot extends TimedRobot {
   TalonFX m_InMoter = new TalonFX(IN_MOTER_ID);
   TalonFX m_OutMoter = new TalonFX(OUT_MOTER_ID);
 
+  double SPEED_CONSTANT;
+
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
@@ -80,12 +82,19 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    // Slow Mode
+    if (m_Controller.getLeftTriggerAxis() > 0.1) {
+      SPEED_CONSTANT = 0.5;
+    } else {
+      SPEED_CONSTANT = 1;
+    }
+
     // Driving forward or backward
     if ((m_Controller.getLeftY() > DRIFT_UPPER_LIM) || (m_Controller.getLeftY() < DRIFT_LOWER_LIM)) {
-      m_Moter_Left1.set(m_Controller.getLeftY());
-      m_Moter_Left2.set(m_Controller.getLeftY());
-      m_Moter_Right1.set(m_Controller.getLeftY());
-      m_Moter_Right2.set(m_Controller.getLeftY());
+      m_Moter_Left1.set(m_Controller.getLeftY()*SPEED_CONSTANT);
+      m_Moter_Left2.set(m_Controller.getLeftY()*SPEED_CONSTANT);
+      m_Moter_Right1.set(m_Controller.getLeftY()*SPEED_CONSTANT);
+      m_Moter_Right2.set(m_Controller.getLeftY()*SPEED_CONSTANT);
     }
 
     // Rotating Right
